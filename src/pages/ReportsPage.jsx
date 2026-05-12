@@ -3,6 +3,19 @@ import Modal from "../components/Modal";
 import { EMAILJS_PUBLIC_KEY, EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID } from "../config/email";
 import { calcEOQ, fmtPeso, getCostPrice, getLowStockThreshold, getProfitPerUnit, getSellingPrice, getStockStatus } from "../utils/inventory";
 
+// ── Only addition: loads EmailJS SDK from CDN so window.emailjs.send() works ──
+const EMAILJS_CDN = "https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js";
+function loadEmailJS() {
+  return new Promise((resolve, reject) => {
+    if (window.emailjs) { resolve(); return; }
+    const s = document.createElement("script");
+    s.src = EMAILJS_CDN;
+    s.onload = resolve;
+    s.onerror = () => reject(new Error("Failed to load EmailJS"));
+    document.head.appendChild(s);
+  });
+}
+
 export default function ReportsPage({ products, user, toast }) {
   const [period, setPeriod] = useState("weekly");
   const [email, setEmail] = useState(user?.email || "");
@@ -143,6 +156,7 @@ export default function ReportsPage({ products, user, toast }) {
     toast("Email draft opened. You still need to send it.");
   };
 
+  // ── Only this function changed: uses window.emailjs.send() instead of fetch ──
   const sendDirectEmail = async () => {
     if (!email.includes("@")) {
       setStatus("Please enter a valid email.");
@@ -155,43 +169,36 @@ export default function ReportsPage({ products, user, toast }) {
       return;
     }
 
+    setStatus("Sending…");
+
     try {
+      await loadEmailJS();
+      window.emailjs.init(EMAILJS_PUBLIC_KEY);
+
       const snapshot = buildReportSnapshot();
-      const res = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          service_id: EMAILJS_SERVICE_ID,
-          template_id: EMAILJS_TEMPLATE_ID,
-          user_id: EMAILJS_PUBLIC_KEY,
-          template_params: {
-            to_email: email,
-            user_email: user?.email || email,
-            generated_at: snapshot.generatedAt,
-            generated_date: snapshot.generatedDate,
-            generated_time: snapshot.generatedTime,
-            generated_iso: snapshot.generatedIso,
-            report_period: snapshot.reportPeriod,
-            report_period_label: snapshot.reportPeriodLabel,
-            date_range: snapshot.dateRange,
-            total_products: snapshot.totalProducts,
-            low_critical_count: snapshot.lowCriticalCount,
-            report_body: snapshot.reportBody,
-          },
-        }),
+
+      await window.emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+        to_email: email,
+        user_email: user?.email || email,
+        generated_at: snapshot.generatedAt,
+        generated_date: snapshot.generatedDate,
+        generated_time: snapshot.generatedTime,
+        generated_iso: snapshot.generatedIso,
+        report_period: snapshot.reportPeriod,
+        report_period_label: snapshot.reportPeriodLabel,
+        date_range: snapshot.dateRange,
+        total_products: snapshot.totalProducts,
+        low_critical_count: snapshot.lowCriticalCount,
+        report_body: snapshot.reportBody,
       });
-      if (!res.ok) {
-        const details = await res.text();
-        const message = details?.trim()
-          ? `EmailJS rejected the request: ${details.trim()}`
-          : "EmailJS rejected the request. Check Service ID, Template ID, Public Key, Gmail connection, and template variables.";
-        throw new Error(message);
-      }
+
       setStatus("Report sent directly to email.");
       toast("Report sent to email!");
     } catch (e) {
-      setStatus("Direct email failed: " + e.message);
+      const msg = e?.text || e?.message || "Unknown error.";
+      setStatus("Direct email failed: " + msg);
       toast("Direct email failed.", "error");
+      console.error("[InvMax] EmailJS error:", e);
     }
   };
 
