@@ -26,7 +26,6 @@ export default function AuthPage({ onLogin, toast }) {
   const [err, setErr] = useState("");
   const [showForgot, setShowForgot] = useState(false);
   const [showTerms, setShowTerms] = useState(false);
-  const [showQr, setShowQr] = useState(false);
 
   // Login state
   const [liEmail, setLiEmail] = useState("");
@@ -189,9 +188,8 @@ export default function AuthPage({ onLogin, toast }) {
                 <EyeIcon show={showLiPw} onToggle={() => setShowLiPw(v => !v)} />
               </div>
             </div>
-            <div style={{ display: "flex", justifyContent: "space-between", gap: 10, margin: "-6px 0 14px" }}>
+            <div style={{ display: "flex", justifyContent: "flex-start", margin: "-6px 0 14px" }}>
               <button className="link-btn" type="button" onClick={() => setShowForgot(true)}>Forgot Password?</button>
-              <button className="link-btn" type="button" onClick={() => setShowQr(true)}><Icon name="qr" size={13} /> QR Login</button>
             </div>
             <button className="btn btn-primary" style={{ width: "100%", justifyContent: "center", marginTop: 4 }} type="submit" disabled={loading}>
               {loading ? "Logging in…" : "Login"}
@@ -294,19 +292,6 @@ export default function AuthPage({ onLogin, toast }) {
         </Modal>
       )}
 
-      {showQr && (
-        <Modal title="QR Login" onClose={() => setShowQr(false)}>
-          <div className="qr-panel">
-            <Icon name="qr" size={44} />
-            <p>
-              QR login is prepared as a secure account-login feature for existing users.
-              To activate real QR login, add a backend endpoint that creates and verifies
-              short-lived login tokens. The app will not fake a successful QR login.
-            </p>
-          </div>
-        </Modal>
-      )}
-
       {showTerms && (
         <Modal title="Terms and Conditions" onClose={() => setShowTerms(false)} maxWidth={640}>
           <div className="terms-content">
@@ -325,7 +310,7 @@ export default function AuthPage({ onLogin, toast }) {
             </p>
             <p>
               InvMax protects account access through password requirements and authenticated
-              database rules. Do not share your password or account QR credentials.
+              database rules. Do not share your password or account credentials.
             </p>
           </div>
           <button className="btn btn-primary" onClick={() => { setTermsOpened(true); setShowTerms(false); }}>
