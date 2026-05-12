@@ -1,2 +1,2 @@
-export const SUPABASE_URL = "https://ekygecfenzwlbuwykcwq.supabase.co";
-export const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVreWdlY2Zlbnp3bGJ1d3lrY3dxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1MTMwOTcsImV4cCI6MjA5NDA4OTA5N30.LL_Ul7PvMXgNRDaNhfAAkUUQN4HwZDUgjYqPhCV3jsg"
+export const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
+export const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;

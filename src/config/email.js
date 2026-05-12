@@ -1,3 +1,3 @@
-export const EMAILJS_SERVICE_ID = "service_hnjhthu";
-export const EMAILJS_TEMPLATE_ID = "template_k7t2amg";
-export const EMAILJS_PUBLIC_KEY = "NnrDVB-kFGUXFPhez";
+export const EMAILJS_SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+export const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+export const EMAILJS_PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
