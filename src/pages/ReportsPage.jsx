@@ -224,9 +224,7 @@ export default function ReportsPage({ products, user, toast }) {
             <label>Send report to email</label>
             <input className="input" type="email" value={email} onChange={e => setEmail(e.target.value)} />
           </div>
-          <div style={{ fontSize: 12, color: "var(--text2)", marginBottom: 12 }}>
-            Use Send Direct Email after configuring src/config/email.js. If not configured, open a draft, copy, or download the report.
-          </div>
+          
           {status && <div style={{ fontSize: 13, color: getStatusColor(), marginBottom: 12 }}>{status}</div>}
           <div style={{ display: "flex", gap: 10 }}>
             <button className="btn btn-primary" onClick={sendDirectEmail}>Send Direct Email</button>
