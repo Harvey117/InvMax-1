@@ -31,6 +31,7 @@ export default function AuthPage({ onLogin, toast }) {
   // Login state
   const [liEmail, setLiEmail] = useState("");
   const [liPw, setLiPw] = useState("");
+  const [showLiPw, setShowLiPw] = useState(false);
 
   // Signup state
   const [suName, setSuName] = useState("");
@@ -38,7 +39,11 @@ export default function AuthPage({ onLogin, toast }) {
   const [suPhone, setSuPhone] = useState("");
   const [suDob, setSuDob] = useState("");
   const [suPw, setSuPw] = useState("");
+  const [suConfirmPw, setSuConfirmPw] = useState("");
   const [pwHint, setPwHint] = useState("");
+  const [confirmPwHint, setConfirmPwHint] = useState("");
+  const [showSuPw, setShowSuPw] = useState(false);
+  const [showSuConfirmPw, setShowSuConfirmPw] = useState(false);
   const [termsOpened, setTermsOpened] = useState(false);
   const [termsAgreed, setTermsAgreed] = useState(false);
 
@@ -75,6 +80,7 @@ export default function AuthPage({ onLogin, toast }) {
     if (age < 18) { setErr("You must be at least 18 to register."); return; }
     const pwErrors = validatePassword(suPw);
     if (pwErrors.length) { setErr("Password missing: " + pwErrors.join(", ")); return; }
+    if (suPw !== suConfirmPw) { setErr("Passwords do not match."); return; }
     if (!termsOpened || !termsAgreed) { setErr("Open and read the Terms and Conditions before agreeing."); return; }
     setLoading(true);
     const { data, error } = await supabase.auth.signUp({
@@ -97,7 +103,50 @@ export default function AuthPage({ onLogin, toast }) {
     if (!v) setPwHint("");
     else if (e.length) setPwHint("Missing: " + e.join(", "));
     else setPwHint("✓ Strong password");
+
+    if (suConfirmPw) {
+      setConfirmPwHint(v === suConfirmPw ? "✓ Passwords match" : "Passwords do not match");
+    }
   };
+
+  const confirmPwCheck = (v) => {
+    setSuConfirmPw(v);
+    if (!v) setConfirmPwHint("");
+    else setConfirmPwHint(suPw === v ? "✓ Passwords match" : "Passwords do not match");
+  };
+
+  const EyeIcon = ({ show, onToggle }) => (
+    <button
+      type="button"
+      onClick={onToggle}
+      style={{
+        position: "absolute",
+        right: 12,
+        top: "50%",
+        transform: "translateY(-50%)",
+        background: "none",
+        border: "none",
+        cursor: "pointer",
+        color: "var(--text2)",
+        padding: 0,
+        display: "flex",
+        alignItems: "center",
+      }}
+      aria-label={show ? "Hide password" : "Show password"}
+    >
+      {show ? (
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+          <line x1="1" y1="1" x2="23" y2="23"/>
+        </svg>
+      ) : (
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+          <circle cx="12" cy="12" r="3"/>
+        </svg>
+      )}
+    </button>
+  );
 
   return (
     <div className="auth-bg">
@@ -127,7 +176,18 @@ export default function AuthPage({ onLogin, toast }) {
             </div>
             <div className="field">
               <label>Password</label>
-              <input className="input" type="password" value={liPw} onChange={e => setLiPw(e.target.value)} placeholder="••••••••" required />
+              <div style={{ position: "relative" }}>
+                <input
+                  className="input"
+                  type={showLiPw ? "text" : "password"}
+                  value={liPw}
+                  onChange={e => setLiPw(e.target.value)}
+                  placeholder="••••••••"
+                  style={{ paddingRight: 40 }}
+                  required
+                />
+                <EyeIcon show={showLiPw} onToggle={() => setShowLiPw(v => !v)} />
+              </div>
             </div>
             <div style={{ display: "flex", justifyContent: "space-between", gap: 10, margin: "-6px 0 14px" }}>
               <button className="link-btn" type="button" onClick={() => setShowForgot(true)}>Forgot Password?</button>
@@ -158,11 +218,42 @@ export default function AuthPage({ onLogin, toast }) {
             </div>
             <div className="field">
               <label>Password</label>
-              <input className="input" type="password" value={suPw} onChange={e => pwCheck(e.target.value)} placeholder="••••••••" required />
+              <div style={{ position: "relative" }}>
+                <input
+                  className="input"
+                  type={showSuPw ? "text" : "password"}
+                  value={suPw}
+                  onChange={e => pwCheck(e.target.value)}
+                  placeholder="••••••••"
+                  style={{ paddingRight: 40 }}
+                  required
+                />
+                <EyeIcon show={showSuPw} onToggle={() => setShowSuPw(v => !v)} />
+              </div>
               <div className="password-rules">
                 At least 8 characters, 1 uppercase, 1 lowercase, 1 number, and 1 special character.
               </div>
               {pwHint && <div className="field-hint" style={{ color: pwHint.startsWith("✓") ? "var(--teal)" : "var(--amber)" }}>{pwHint}</div>}
+            </div>
+            <div className="field">
+              <label>Confirm Password</label>
+              <div style={{ position: "relative" }}>
+                <input
+                  className="input"
+                  type={showSuConfirmPw ? "text" : "password"}
+                  value={suConfirmPw}
+                  onChange={e => confirmPwCheck(e.target.value)}
+                  placeholder="••••••••"
+                  style={{ paddingRight: 40 }}
+                  required
+                />
+                <EyeIcon show={showSuConfirmPw} onToggle={() => setShowSuConfirmPw(v => !v)} />
+              </div>
+              {confirmPwHint && (
+                <div className="field-hint" style={{ color: confirmPwHint.startsWith("✓") ? "var(--teal)" : "var(--red)" }}>
+                  {confirmPwHint}
+                </div>
+              )}
             </div>
             <div className="terms-box">
               <button className="btn btn-ghost btn-sm" type="button" onClick={() => setShowTerms(true)}>
@@ -191,7 +282,6 @@ export default function AuthPage({ onLogin, toast }) {
           <form onSubmit={handleForgotPassword}>
             <p style={{ color: "var(--text2)", marginBottom: 16, fontSize: 13 }}>
               Enter your account email. InvMax will send a reset link through Supabase Auth.
-              Phone reset can be added later if your authentication provider supports SMS.
             </p>
             <div className="field">
               <label>Email</label>
