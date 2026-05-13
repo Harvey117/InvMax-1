@@ -4,7 +4,6 @@ export default function LandingPage({ onEnter }) {
   const badgeDotRef = useRef(null);
 
   useEffect(() => {
-    // Animate stat counters
     const counters = document.querySelectorAll(".landing-stat-value[data-target]");
     counters.forEach(el => {
       const target = el.getAttribute("data-target");
@@ -15,13 +14,10 @@ export default function LandingPage({ onEnter }) {
 
   return (
     <div className="landing-page">
-      {/* Background grid */}
       <div className="landing-grid-bg" aria-hidden="true" />
-      {/* Glow orbs */}
       <div className="landing-glow-orbs" aria-hidden="true" />
 
       <div className="landing-inner">
-        {/* Logo */}
         <div className="landing-logo-wrap">
           <div className="landing-logo-icon">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -31,7 +27,6 @@ export default function LandingPage({ onEnter }) {
           <span className="landing-logo-text">InvMax</span>
         </div>
 
-        {/* Hero */}
         <div className="landing-hero">
           <div className="landing-badge">
             <span className="landing-badge-dot" ref={badgeDotRef} />
@@ -46,7 +41,6 @@ export default function LandingPage({ onEnter }) {
           </p>
         </div>
 
-        {/* CTA */}
         <div className="landing-cta-wrap">
           <button className="landing-btn-primary" onClick={onEnter}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -57,7 +51,6 @@ export default function LandingPage({ onEnter }) {
           <span className="landing-btn-hint">Free to use · No installation needed</span>
         </div>
 
-        {/* Features */}
         <div className="landing-features">
           <div className="landing-feature-card">
             <div className="landing-feature-icon">
@@ -88,7 +81,6 @@ export default function LandingPage({ onEnter }) {
           </div>
         </div>
 
-        {/* Stats */}
         <div className="landing-stats">
           <div className="landing-stat">
             <div className="landing-stat-value" data-target="EOQ">EOQ</div>

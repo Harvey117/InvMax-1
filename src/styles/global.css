@@ -42,12 +42,10 @@
 
   html, body, #root { height: 100%; font-family: var(--font); background: var(--bg); color: var(--text); }
 
-  /* ── Scrollbars ── */
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
 
-  /* ── Layout ── */
   .app-shell { display: flex; height: 100vh; overflow: hidden; }
   .sidebar {
     width: var(--sidebar-w); min-width: var(--sidebar-w);
@@ -99,7 +97,6 @@
   .user-name { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .user-email { font-size: 11px; color: var(--text2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-  /* ── Main area ── */
   .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-width: 0; }
   .topbar {
     height: var(--topbar-h); min-height: var(--topbar-h);
@@ -118,7 +115,6 @@
   .search-input::placeholder { color: var(--muted); }
   .page-content { flex: 1; overflow-y: auto; padding: 28px; }
 
-  /* ── Cards ── */
   .card {
     background: var(--surface);
     border: 1px solid var(--border);
@@ -132,13 +128,11 @@
     display: flex; align-items: center; justify-content: space-between;
   }
 
-  /* ── Stat cards ── */
   .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 20px; }
   .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 20px; }
   .stat-label { font-size: 12px; color: var(--text2); margin-bottom: 6px; text-transform: uppercase; letter-spacing: .5px; }
   .stat-value { font-size: 32px; font-weight: 700; line-height: 1; }
 
-  /* ── Table ── */
   .table-wrap { overflow-x: auto; }
   table { width: 100%; border-collapse: collapse; font-size: 13px; }
   th { padding: 10px 14px; text-align: left; color: var(--text2); font-weight: 500; background: var(--card); border-bottom: 1px solid var(--border); white-space: nowrap; }
@@ -148,7 +142,6 @@
   .tr-critical td { background: rgba(240,82,82,.06); }
   .tr-low td { background: rgba(245,166,35,.05); }
 
-  /* ── Badges ── */
   .badge {
     display: inline-flex; align-items: center; gap: 4px;
     padding: 3px 10px; border-radius: 99px;
@@ -158,7 +151,6 @@
   .badge-low { background: rgba(245,166,35,.15); color: #f5a623; }
   .badge-critical { background: rgba(240,82,82,.15); color: #f05252; }
 
-  /* ── Buttons ── */
   .btn {
     display: inline-flex; align-items: center; gap: 7px;
     padding: 8px 18px; border-radius: var(--radius-sm);
@@ -176,7 +168,6 @@
   .btn-sm { padding: 5px 12px; font-size: 12px; }
   .btn:disabled { opacity: .5; cursor: not-allowed; }
 
-  /* ── Forms ── */
   .field { margin-bottom: 16px; }
   .field label { display: block; font-size: 12px; color: var(--text2); margin-bottom: 6px; font-weight: 500; letter-spacing: .3px; }
   .input {
@@ -192,7 +183,6 @@
   .field-hint { font-size: 11px; color: var(--muted); margin-top: 4px; }
   .field-error { font-size: 12px; color: var(--red); margin-top: 4px; }
 
-  /* ── Auth ── */
   .auth-bg {
     min-height: 100vh; background: var(--bg);
     display: flex; align-items: center; justify-content: center;
@@ -238,7 +228,6 @@
     border: 1px dashed var(--border); border-radius: var(--radius); padding: 22px;
   }
 
-  /* ── Modal ── */
   .modal-overlay {
     position: fixed; inset: 0; background: rgba(0,0,0,.7);
     display: flex; align-items: center; justify-content: center;
@@ -252,7 +241,6 @@
   }
   .modal-title { font-size: 18px; font-weight: 700; margin-bottom: 20px; }
 
-  /* ── Optimize / EOQ ── */
   .eoq-result {
     background: var(--accent-bg); border: 1px solid var(--teal);
     border-radius: var(--radius); padding: 20px 24px; margin-top: 16px;
@@ -269,7 +257,6 @@
   .knap-item-name { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
   .knap-detail { font-size: 12px; color: var(--text2); }
 
-  /* ── Alert banner ── */
   .alert-badge {
     display: flex; align-items: center; gap: 7px;
     padding: 5px 12px; border-radius: var(--radius-sm);
@@ -278,7 +265,6 @@
     cursor: pointer;
   }
 
-  /* ── Toast ── */
   .toast-wrap {
     position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
     z-index: 999; pointer-events: none;
@@ -295,7 +281,6 @@
   .toast-warn    { background: var(--amber); color: var(--bg); }
   @keyframes slideUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
 
-  /* ── Misc ── */
   .sep { height: 1px; background: var(--border); margin: 16px 0; }
   .page-title { font-size: 26px; font-weight: 700; margin-bottom: 4px; letter-spacing: -.5px; }
   .page-sub { font-size: 13px; color: var(--text2); margin-bottom: 24px; }
@@ -318,7 +303,6 @@
   }
   .theme-float:hover { color: var(--text); }
 
-  /* ── Responsive ── */
   @media (max-width: 768px) {
     .sidebar { position: fixed; height: 100vh; transform: translateX(-100%); transition: transform .25s ease; }
     .sidebar.open { transform: translateX(0); }
@@ -337,8 +321,7 @@
   @media (max-width: 480px) {
     .stat-value { font-size: 24px; }
   }
-/* ── Landing Page ── */
-/* Add these rules to the bottom of src/styles/global.css */
+
 
 .landing-page {
   position: relative;
@@ -383,7 +366,7 @@
   width: 100%;
 }
 
-/* Logo */
+
 .landing-logo-wrap {
   display: flex;
   align-items: center;
@@ -407,7 +390,6 @@
   letter-spacing: -.5px;
 }
 
-/* Hero */
 .landing-hero {
   text-align: center;
   max-width: 560px;
@@ -456,7 +438,6 @@
   margin: 0 auto;
 }
 
-/* CTA */
 .landing-cta-wrap {
   display: flex;
   flex-direction: column;
@@ -494,7 +475,6 @@
   color: var(--muted);
 }
 
-/* Features */
 .landing-features {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -537,7 +517,6 @@
   line-height: 1.5;
 }
 
-/* Stats */
 .landing-stats {
   display: flex;
   gap: 40px;
@@ -563,7 +542,6 @@
   letter-spacing: .5px;
 }
 
-/* Footer */
 .landing-footer {
   font-size: 12px;
   color: var(--muted);

@@ -45,7 +45,6 @@ function saveStoredTheme(theme) {
   try { sessionStorage.setItem(THEME_KEY, theme); } catch (_) {}
 }
 
-// Track whether the user has already seen the landing page this session
 function hasSeenLanding() {
   try { return sessionStorage.getItem(VISITED_KEY) === "1"; } catch (_) { return false; }
 }
@@ -63,7 +62,6 @@ function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [theme, setTheme] = useState(() => readStoredTheme());
-  // Show landing page if the user hasn't been through it yet this session
   const [showLanding, setShowLanding] = useState(false);
   const { toasts, show: toast } = useToast();
 
@@ -74,15 +72,12 @@ function App() {
 
   const toggleTheme = () => setTheme(t => t === "dark" ? "light" : "dark");
 
-  // Restore session and decide whether to show landing
   useEffect(() => {
     const storedSession = readStoredSession();
     if (storedSession) {
-      // Already logged in — skip landing
       setSession(storedSession);
       setShowLanding(false);
     } else if (!hasSeenLanding()) {
-      // First visit this session — show landing
       setShowLanding(true);
     }
     setLoading(false);
@@ -105,7 +100,6 @@ function App() {
     setProducts([]);
     setProfile(null);
     setPage("dashboard");
-    // Show landing again on logout
     setShowLanding(true);
   };
 
@@ -143,7 +137,6 @@ function App() {
     </div>
   );
 
-  // ── Landing page (first visit, or after logout) ──
   if (showLanding) return (
     <>
       <LandingPage onEnter={handleEnterApp} />
@@ -155,7 +148,6 @@ function App() {
     </>
   );
 
-  // ── Auth page (not logged in, already past landing) ──
   if (!session) return (
     <>
       <AuthPage onLogin={handleLogin} toast={toast} />
@@ -180,10 +172,8 @@ function App() {
 
   return (
     <div className="app-shell">
-      {/* Sidebar overlay (mobile) */}
       <div className={`sidebar-overlay ${sidebarOpen ? "open" : ""}`} onClick={() => setSidebarOpen(false)} />
 
-      {/* Sidebar */}
       <aside className={`sidebar ${sidebarOpen ? "open" : ""}`}>
         <div className="sidebar-logo">
           <div className="logo-mark">
@@ -216,7 +206,6 @@ function App() {
         </div>
       </aside>
 
-      {/* Main */}
       <div className="main">
         <div className="topbar">
           <button className="hamburger" onClick={() => setSidebarOpen(o => !o)} aria-label="Open menu">
