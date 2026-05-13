@@ -3,7 +3,6 @@ import Modal from "../components/Modal";
 import { EMAILJS_PUBLIC_KEY, EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID } from "../config/email";
 import { calcEOQ, fmtPeso, getCostPrice, getLowStockThreshold, getProfitPerUnit, getSellingPrice, getStockStatus } from "../utils/inventory";
 
-// ── Only addition: loads EmailJS SDK from CDN so window.emailjs.send() works ──
 const EMAILJS_CDN = "https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js";
 function loadEmailJS() {
   return new Promise((resolve, reject) => {
@@ -156,7 +155,6 @@ export default function ReportsPage({ products, user, toast }) {
     toast("Email draft opened. You still need to send it.");
   };
 
-  // ── Only this function changed: uses window.emailjs.send() instead of fetch ──
   const sendDirectEmail = async () => {
     if (!email.includes("@")) {
       setStatus("Please enter a valid email.");

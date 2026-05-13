@@ -27,12 +27,10 @@ export default function AuthPage({ onLogin, toast }) {
   const [showForgot, setShowForgot] = useState(false);
   const [showTerms, setShowTerms] = useState(false);
 
-  // Login state
   const [liEmail, setLiEmail] = useState("");
   const [liPw, setLiPw] = useState("");
   const [showLiPw, setShowLiPw] = useState(false);
 
-  // Signup state
   const [suName, setSuName] = useState("");
   const [suEmail, setSuEmail] = useState("");
   const [suPhone, setSuPhone] = useState("");

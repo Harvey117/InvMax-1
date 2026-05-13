@@ -5,6 +5,7 @@ import useToast from "./hooks/useToast";
 import AuthPage from "./pages/AuthPage";
 import Dashboard from "./pages/Dashboard";
 import HelpPage from "./pages/HelpPage";
+import LandingPage from "./pages/LandingPage";
 import OptimizePage from "./pages/OptimizePage";
 import ProductsPage from "./pages/ProductsPage";
 import ProfilePage from "./pages/ProfilePage";
@@ -14,6 +15,7 @@ import { getLowStockThreshold } from "./utils/inventory";
 
 const SESSION_KEY = "invmax_session";
 const THEME_KEY = "invmax_theme";
+const VISITED_KEY = "invmax_visited";
 
 function readStoredSession() {
   try {
@@ -28,10 +30,7 @@ function readStoredSession() {
 function saveStoredSession(sess) {
   try {
     sessionStorage.setItem(SESSION_KEY, JSON.stringify(sess));
-  } catch (_) {
-    // Storage can be blocked in some embedded browsers. Keep the user signed in
-    // for the current React session even if persistence is unavailable.
-  }
+  } catch (_) {}
 }
 
 function clearStoredSession() {
@@ -46,6 +45,15 @@ function saveStoredTheme(theme) {
   try { sessionStorage.setItem(THEME_KEY, theme); } catch (_) {}
 }
 
+// Track whether the user has already seen the landing page this session
+function hasSeenLanding() {
+  try { return sessionStorage.getItem(VISITED_KEY) === "1"; } catch (_) { return false; }
+}
+
+function markLandingSeen() {
+  try { sessionStorage.setItem(VISITED_KEY, "1"); } catch (_) {}
+}
+
 function App() {
   const [session, setSession] = useState(null);
   const [products, setProducts] = useState([]);
@@ -55,6 +63,8 @@ function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [theme, setTheme] = useState(() => readStoredTheme());
+  // Show landing page if the user hasn't been through it yet this session
+  const [showLanding, setShowLanding] = useState(false);
   const { toasts, show: toast } = useToast();
 
   useEffect(() => {
@@ -64,12 +74,24 @@ function App() {
 
   const toggleTheme = () => setTheme(t => t === "dark" ? "light" : "dark");
 
-  // Try to restore session from storage
+  // Restore session and decide whether to show landing
   useEffect(() => {
     const storedSession = readStoredSession();
-    if (storedSession) setSession(storedSession);
+    if (storedSession) {
+      // Already logged in — skip landing
+      setSession(storedSession);
+      setShowLanding(false);
+    } else if (!hasSeenLanding()) {
+      // First visit this session — show landing
+      setShowLanding(true);
+    }
     setLoading(false);
   }, []);
+
+  const handleEnterApp = () => {
+    markLandingSeen();
+    setShowLanding(false);
+  };
 
   const handleLogin = (sess) => {
     setSession(sess);
@@ -83,6 +105,8 @@ function App() {
     setProducts([]);
     setProfile(null);
     setPage("dashboard");
+    // Show landing again on logout
+    setShowLanding(true);
   };
 
   const fetchProducts = useCallback(async () => {
@@ -119,6 +143,19 @@ function App() {
     </div>
   );
 
+  // ── Landing page (first visit, or after logout) ──
+  if (showLanding) return (
+    <>
+      <LandingPage onEnter={handleEnterApp} />
+      <button className="theme-float" onClick={toggleTheme} aria-label="Toggle light mode">
+        <Icon name={theme === "dark" ? "sun" : "moon"} size={16} />
+        {theme === "dark" ? "Light" : "Dark"}
+      </button>
+      <ToastContainer toasts={toasts} />
+    </>
+  );
+
+  // ── Auth page (not logged in, already past landing) ──
   if (!session) return (
     <>
       <AuthPage onLogin={handleLogin} toast={toast} />
@@ -224,6 +261,5 @@ function App() {
     </div>
   );
 }
-
 
 export default App;
